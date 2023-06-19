@@ -12,7 +12,7 @@ soup = BeautifulSoup(r.content, 'lxml')
 
 data = []
 
-title = soup.find('h1', class_='titre')
+title = soup.find('h1', class_='titre').text.strip()
 
 tab_list = soup.find('div', class_='field-collection-container clearfix')
 tabs_years = tab_list.find('div', class_='item-list')
@@ -27,7 +27,7 @@ content = list_content.find_all('div', class_='field-item even rich-text')
 
 with open('40.0113.csv', 'w', newline='' , encoding='utf-8') as csvfile:
     writer = csv.writer(csvfile)
-    writer.writerow(['Name','Links Document', 'Date of Order' , 'PERSON / COMPANY'])
+    writer.writerow(['Name','Links Document', 'Month', 'Year', 'Document Name' ])
 
     for index, year in enumerate(list_years):
         names = content[index].find_all('li')
@@ -37,14 +37,17 @@ with open('40.0113.csv', 'w', newline='' , encoding='utf-8') as csvfile:
             link = name.find('a')['href']
             links_Document = 'https://acpr.banque-france.fr' + link 
             month = name.find_previous('h2').text.strip()
-            date_of_order = "'" + month + ' - ' +  year
+            # date_of_order = "'" + month + ' - ' +  year
 
             fileName_40_0113 = {
                 "Name": name_text,
                 "Links Document": links_Document.replace('https://acpr.banque-france.frhttps://acpr.banque-france.fr/','https://acpr.banque-france.fr/'),
-                "Date of Order": date_of_order,
+                # "Date of Order": date_of_order,
+                "Month": month,
+                "Year": year,
+                "Document Name": title,
             }
             data.append(fileName_40_0113)
             print('Saving', fileName_40_0113['Name'])
 
-            writer.writerow([fileName_40_0113['Name'],  fileName_40_0113['Links Document'], fileName_40_0113['Date of Order'], 'Company', ])
+            writer.writerow([fileName_40_0113['Name'],  fileName_40_0113['Links Document'], fileName_40_0113['Month'], fileName_40_0113['Year'], fileName_40_0113['Document Name'] ])

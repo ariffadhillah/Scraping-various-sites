@@ -1,3 +1,5 @@
+# fileName 40.0204 
+
 import requests
 import json
 import csv
@@ -24,18 +26,25 @@ response = requests.post(url, headers=headers, data=payload)
 
 if response.status_code == 200:
     try:
-        dataList = json.loads(response.text)  # Parsing data JSON
+        data = json.loads(response.text)  # Parsing data JSON
 
-        ds1_data = dataList['DS1']
+        ds1_data = data['DS1']
 
-        for item in ds1_data:
-            
-            name = item['isu_nm']
-            currentPrice = item['isu_cur_pr']
-            change = item['prv_dd_cmpr']
-            disclosureDate = item['act_dd']
-            designation = item['design_dd']
-            code = item['isu_srt_cd']
+        with open('40.0204.csv', mode='w', encoding='utf-8', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(['Name', 'Current Price', 'Change', 'Disclosure Date', 'Designation', 'Code'])
+
+            for item in ds1_data:
+                name = item.get('isu_nm')
+                current_price = item.get('isu_cur_pr')
+                change = item.get('prv_dd_cmpr')
+                disclosure_date = item.get('act_dd')
+                designation = item.get('design_dd')
+                code = item.get('isu_srt_cd')
+
+                writer.writerow([name, current_price, change, disclosure_date, designation, code])
+
+        print("Data has been saved to 40.0204.csv")
 
     except json.JSONDecodeError as e:
         print("Error parsing JSON:", e)
