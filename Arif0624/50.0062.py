@@ -6,14 +6,14 @@ import csv
 
 base_url = 'https://journaldemonaco.gouv.mc'
 
-url = 'https://journaldemonaco.gouv.mc/content/search?SearchText=&filter%5b%5d=attr_theme_s:%22Licenciements%22&activeFacets%5battr_theme_s:Th%C3%A8mes%5d=Licenciements&activeFacets%5barticle_jdm/category:Cat%C3%A9gories%5d=Avis%20et%20Communiqu%C3%A9s&sort=published_desc&page_limit=15'
+url = 'https://journaldemonaco.gouv.mc/content/search?SearchText=&filter%5b%5d=attr_theme_s:%22R%C3%A9vocation%22&activeFacets%5battr_theme_s:Th%C3%A8mes%5d=R%C3%A9vocation&activeFacets%5barticle_jdm/category:Cat%C3%A9gories%5d=Avis%20et%20Communiqu%C3%A9s&sort=published_desc&page_limit=15' 
 
 headers = {
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.58'
 }
 
 fields = ['Title Link' , 'Title Summary / Content' , 'Newspaper No' , 'Page No' , 'Date of publication' , 'Content' , 'Links Document' , 'View the journal in PDF format']
-filename = '50.0063.csv'
+filename = '50.0062.csv'
 
 r = requests.get(url, headers=headers)
 soup = BeautifulSoup(r.content, 'lxml')
@@ -68,7 +68,7 @@ for pageURL, titleLink in pageItem:
         urlPDF
     
 
-        data_50_0063 = {
+        data_50_0062 = {
             'Title Link' : titleLink,
             'Title Summary / Content' : subTitle,
             'Newspaper No' : njournal_text,
@@ -79,8 +79,8 @@ for pageURL, titleLink in pageItem:
             'View the journal in PDF format' : urlPDF
         }
         
-        data.append(data_50_0063)
-        print('Saving',data_50_0063['Title Link'], data_50_0063['Title Summary / Content'])
+        data.append(data_50_0062)
+        print('Saving',data_50_0062['Title Link'], data_50_0062['Title Summary / Content'])
         with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fields)
             writer.writeheader()
