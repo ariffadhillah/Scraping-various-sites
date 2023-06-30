@@ -1,0 +1,37 @@
+ssh-add ~/Documents/ssh-key/key.pem
+ssh ubuntu@3.104.36.152
+
+
+
+
+
+cara menyalin file dari komputer ke AWS
+ scp -r vmaxbrakes ubuntu@3.104.36.152:/home/ubuntu/Web_scraping/
+
+ssh -i .\key-web-scraping.pem ubuntu@54.66.51.127
+
+run server AWS
+
+sudo cp 50.0061.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable 50.0061.service
+
+sudo systemctl start 50.0061.service
+
+sudo systemctl status 50.0061.service
+
+sudo journalctl -u 50.0061.service -f
+sudo journalctl -u data_50_0416.service -f
+
+sudo systemctl status data_50_0416.service
+
+[Unit]
+Description=My program description
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ubuntu/web-scraping/folder16
+ExecStart=/usr/bin/python3 /web-scraping/folder16/50.0416.py
+
+[Install]
+WantedBy=multi-user.target
