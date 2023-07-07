@@ -77,7 +77,6 @@ for link in urlCase:
         print('Saving', data_40_0308['Name'], data_40_0308['Name Document'])
         data.append(data_40_0308)
 
-        # Menulis data ke dalam file CSV
         with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fields)
             writer.writeheader()

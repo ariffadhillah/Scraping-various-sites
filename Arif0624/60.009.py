@@ -20,8 +20,6 @@ datePage = soup.find('div', class_='date-info full-date-info').text.strip()
 data = []
 
 table = soup.find('table')
-# df = pd.read_html(str(table), header=0)[0]  # Menggunakan header=0 untuk memuat header dari indeks ke-0
-# df = df.iloc[2:, :]  # Memulai dari indeks ke-2 untuk menghindari header
 
 df = pd.read_html(str(table), header=0)[0] 
 df.columns = ['No.', 'Liquidator', 'Bank Name', 'Legal Address', 'Contacts', 'Document regarding the appointment as Liquidator']
