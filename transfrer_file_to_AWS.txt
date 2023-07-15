@@ -1,29 +1,29 @@
 ssh-add ~/Documents/ssh-key/key.pem
 ssh ubuntu@3.104.36.152
-
+Partly   
 
 
 
 
 cara menyalin file dari komputer ke AWS
- scp -r vmaxbrakes ubuntu@3.104.36.152:/home/ubuntu/Web_scraping/
+
+scp -r -i key-web-scraping.pem data_80_0007 ubuntu@3.104.36.152:/home/ubuntu/Web_scraping/
 
 ssh -i .\key-web-scraping.pem ubuntu@54.66.51.127
 
 run server AWS
 
-sudo cp 50.0061.service /etc/systemd/system/
+sudo cp data_80_0007.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable 50.0061.service
+sudo systemctl enable data_80_0007.service
 
-sudo systemctl start 50.0061.service
+sudo systemctl start data_80_0007.service
 
-sudo systemctl status 50.0061.service
+sudo systemctl status data_80_0007.service
 
-sudo journalctl -u 50.0061.service -f
-sudo journalctl -u data_50_0416.service -f
+sudo journalctl -u data_80_0007.service -f
 
-sudo systemctl status data_50_0416.service
+
 
 [Unit]
 Description=My program description
