@@ -2,8 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import re
 
+url = 'https://www.advokatsamfundet.se/Advokatsamfundet-engelska/Find-a-lawyer/Search-result/Person-details/?personid=1795'
 # url = 'https://www.advokatsamfundet.se/Advokatsamfundet-engelska/Find-a-lawyer/Search-result/Person-details/?personid=3047'
-url = 'https://www.advokatsamfundet.se/Advokatsamfundet-engelska/Find-a-lawyer/Search-result/Person-details/?personid=3047'
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
 r = requests.get(url, headers=headers)
 soup = BeautifulSoup(r.content, 'html.parser')
@@ -35,22 +35,29 @@ if sibling_contact:
 
 personal_div = personalinfo.find('div', string='Personal')
 if personal_div:
-    post_text_div = personal_div.find_next('div', class_='post-text')
-    year_of_birth_tag = post_text_div.find('span', string='Year of birth: ')
+    personal_text_div = personal_div.find_next('div', class_='post-text')
+    year_of_birth_tag = personal_text_div.find('span', string='Year of birth: ')
     if year_of_birth_tag:
         year_of_birth = year_of_birth_tag.next_sibling.strip()
         print(year_of_birth)
     
-    yearofmembership_tag = post_text_div.find('span', string='Year of membership: ')
+    yearofmembership_tag = personal_text_div.find('span', string='Year of membership: ')
     if yearofmembership_tag:
         yearofmembership = yearofmembership_tag.next_sibling.strip()
         print(yearofmembership)
 
-    status_tag = post_text_div.find('span', string='Status: ')
+    status_tag = personal_text_div.find('span', string='Status: ')
     if status_tag:
         status = status_tag.next_sibling.strip()
         print(status)
     
+language_div = personalinfo.find('div', string='Language')
+if language_div:
+    language_text_div = language_div.find_next('div', class_='post-text')    
+    if language_text_div:
+        texts_Language = list(language_text_div.stripped_strings)
+        language = ' , '.join(texts_Language)
+        print(language)
 
 data_90_1549 = {
     'Name': name,
