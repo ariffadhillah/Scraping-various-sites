@@ -33,37 +33,43 @@ for detailsPage in url:
     r = requests.get(detailsPage, headers=headers , verify=False)
     soup = BeautifulSoup(r.content, 'lxml')
 
-    companyName = soup.find('span', class_='BCU_form_label').text.strip()
+    try:
+
+        companyName = soup.find('span', class_='BCU_form_label').text.strip()
 
 
 
-    find_tables = soup.find_all('table', {'id': ['lstAdministracion', 'lstDirectorio']})
+        find_tables = soup.find_all('table', {'id': ['lstAdministracion', 'lstDirectorio', 'lstSindicatura']})
 
-    for item in find_tables:
-        names = item.find_all('span', class_='dirnombre')
-        title_staff = item.find_all('span', class_='dircargo')
+        for item in find_tables:
+            names = item.find_all('span', class_='dirnombre')
+            title_staff = item.find_all('span', class_='dircargo')
 
-        for name_, title_ in zip(names, title_staff):
-            name = name_.text
-            title = title_.text
-            
-            data_90_2445 = {
-                'Name' : name,
-                'Personal Superior' : title,
-                'Company Name' : companyName,
-                'Link Page' : detailsPage
-            }
+            for name_, title_ in zip(names, title_staff):
+                name = name_.text
+                title = title_.text
+                
+                data_90_2445 = {
+                    'Name' : name,
+                    'Personal Superior' : title,
+                    'Company Name' : companyName,
+                    'Link Page' : detailsPage
+                }
 
-            data.append(data_90_2445)
-            print('Saving', data_90_2445['Name'])
+                data.append(data_90_2445)
+                print('Saving', data_90_2445['Name'])
 
-            fields = ['Name', 'Personal Superior' , 'Company Name' , 'Link Page']
-            filename = '90.2445.csv'
+                fields = ['Name', 'Personal Superior' , 'Company Name' , 'Link Page']
+                filename = '90.2445.csv'
 
-            with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
-                writer = csv.DictWriter(csvfile, fieldnames=fields)
-                writer.writeheader()
-                writer.writerows(data)
+                with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
+                    writer = csv.DictWriter(csvfile, fieldnames=fields)
+                    writer.writeheader()
+                    writer.writerows(data)
+    except:
+        companyName = ''
+        find_tables = ''
+
 
 
 
