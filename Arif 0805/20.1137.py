@@ -11,22 +11,21 @@ headers = {
 
 data = []
 
-fields = ['Names', 'Address' , 'Political Name']
-filename = '20.2203.csv'
+fields = ['Names', 'Roles', 'Department Contact Information' , 'Address' , 'Business Hours' , 'Email Address' , 'Contact Information']
+filename = '20.1137.csv'
 
 r = requests.get(url, headers=headers)
 soup = BeautifulSoup(r.content, 'lxml')
 
 find_section = soup.find('div', class_='panels-flexible-region panels-flexible-region-4-center panels-flexible-region-last')
-# print(find_section)
-name = find_section.find('div', class_='panel-pane pane-entity-field pane-node-field-department-head-s-name')
-print(name.text.strip())
 
+
+name = find_section.find('div', class_='panel-pane pane-entity-field pane-node-field-department-head-s-name')
 roles = find_section.find('div', class_='field field-name-field-department-head-s-position field-type-text field-label-hidden')
-print(roles.text.strip())
 
 find_address = soup.find_all('div', class_='view-content')[3]
 info = find_address.find('h5', class_='field-content').text
+
 address = find_address.find('div', class_='views-field views-field-body').text.strip()
 business_hours = find_address.find('div', class_='views-field views-field-field-business-hours').text.strip().replace('Business Hours:','')
 
@@ -38,7 +37,23 @@ email_Address = emailAddress.find_next_sibling('span').get_text(strip=True)
 contact_form_link = soup.find('a', string='Contact Form')
 
 # Dapatkan teks dari parent elemen 'div' kedua yang berisi paragraf dengan teks yang diinginkan
-result_text = contact_form_link.find_next('div').find_next('p')
+contact_form = contact_form_link.find_next('div').find_next('p')
 
-print(result_text.text)
 
+data_20_1137 = {
+    'Names' : name.text.strip(),
+    'Roles' : roles.text.strip(),
+    'Department Contact Information' : info.strip(),
+    'Address': address.strip(),
+    'Business Hours': business_hours.strip(),
+    'Email Address': email_Address.strip(),
+    'Contact Information': contact_form.text.strip()
+}
+
+data.append(data_20_1137)
+print('Saving', data_20_1137['Names'])
+with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
+    writer = csv.DictWriter(csvfile, fieldnames=fields)
+    writer.writeheader()
+    for item in data:
+        writer.writerow(item)  
