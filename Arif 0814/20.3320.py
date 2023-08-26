@@ -51,11 +51,11 @@ for card_ in find_section:
                     # roles = info[0]
                     name = info_text[0]
                     # roles = info_text[1]
-                    roles = '\n'.join(info_text) 
+                    roles = '  ,  ' .join(info_text[1:])
 
                     data_save = {
                         'Names' : name,
-                        'Roles' : roles.replace(name,'').replace('Biography','').strip() ,
+                        'Roles' : roles.replace(name,'').replace('Biography','').replace('Member  ,','Member ').strip() ,
                         'Titles' : title
                     }
                     data.append(data_save)
