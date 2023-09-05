@@ -1,4 +1,5 @@
 import requests
+import csv
 
 url = "https://fmaregister-api.fma-li.li/api/v1/search?query=&registerNumber=&category=72&category=22&searchType=active&sortColumn=name&ascending=true&page=0"
 
@@ -23,6 +24,10 @@ headers = {
 
 response = requests.request("GET", url, headers=headers, data=payload)
 
+save_data = []
+fields = ['Name' , 'National ID' , 'Adresse' , 'Phone' , 'Email' , 'Registration Details' , 'Art' , 'Erteilt']
+filename = '90.0830.csv'
+
 if response.status_code == 200:
 	dataJson = response.json()
 	data_API = dataJson['data']
@@ -45,30 +50,37 @@ if response.status_code == 200:
 
 		grants = info['grants']
 		for info_grants in grants:
-			# descriptionEnglish = info_grants['basedOnLawTextEn']
-			restrictionsDe = info_grants['restrictionsDe']
-			print(restrictionsDe)
+			restrictionsDe = info_grants.get('restrictionsDe', '')
+			if restrictionsDe is None:
+				restrictionsDe = ''
 
-			grantType = info_grants['grantType']
-			
+			registeredTextDe = info_grants.get('registeredTextDe', '')
+			if registeredTextDe is None:
+				registeredTextDe = ''
+
+			grantType = info_grants['grantType']			
 			if grantType:
-				descriptionGerman = grantType['descriptionGerman'] 
-				print(descriptionGerman)
+				descriptionGerman = grantType.get('descriptionGerman', '')
+				if descriptionGerman is None:
+					descriptionGerman = ''
 
+		data_save = {
+			'Name' : name,
+			'National ID' : crmId,
+			'Adresse' : address,
+			'Phone' : phone,
+			'Email': email,
+			'Registration Details' : restrictionsDe,
+			'Art' : descriptionGerman,
+			'Erteilt' : registeredTextDe
+		}
+		save_data.append(data_save)
+		print('Saving', data_save['Name'])
+		with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
+			writer = csv.DictWriter(csvfile, fieldnames=fields)
+			writer.writeheader()
+			writer.writerows(save_data)
 
-			# for info_grantType in grantType:
-			# 	print(descriptionGerman)
-
-
-		# print(name)
-		# print(crmId)
-		# print(phone)
-		# print(email)
-		# print(address)
-
-		# print(descriptionEnglish)
-		# print( )
-	
 
 else:
 	print("Error Status ", response.status_code)
