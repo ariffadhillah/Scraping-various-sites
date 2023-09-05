@@ -6,8 +6,8 @@ base_url = "https://edesk.apps.cssf.lu/search-entities-api/api/v1/entite?"
 
 data = []
 
-fields = ['Name' , 'Type' , 'Code' , 'LEI code' , 'Constitution date', 'Address', 'Link to Firm Details']
-filename = '90.0790.csv'
+fields = ['Name' , 'Type' , 'Code' , 'LEI code' , 'Address', 'Link to Firm Details']
+filename = '90.0802.csv'
 
 payload = {}
 headers = {
@@ -27,10 +27,10 @@ headers = {
 }
 
 page = 0
-max_page = 1
+max_page = 24
 while page <= max_page:
     time.sleep(2)    
-    url  = f"{base_url}page={page}&size=100&st=advanced&entType=B&sort=entiteType,asc&sort=entiteName,asc"
+    url  = f"{base_url}page={page}&size=20&st=advanced&entType=EMT&sort=entiteType,asc&sort=entiteName,asc"
     print(url)
 
     response = requests.request("GET", url, headers=headers, data=payload)
@@ -77,9 +77,9 @@ while page <= max_page:
                     'Type' : entiteType,           
                     'Code' : entiteCode,           
                     'LEI code' : leiCode,
-                    'Constitution date' : dtDebValid,
+                    # 'Constitution date' : dtDebValid,
                     'Address' : entiteAddress,
-                    'Link to Firm Details' : 'https://edesk.apps.cssf.lu/search-entities/entite/details/' + str(entiteId) + '?lng=en&q=&st=advanced&entType=B'
+                    'Link to Firm Details' : 'https://edesk.apps.cssf.lu/search-entities/entite/details/' + str(entiteId) + '?lng=en&q=&st=advanced&entType=EMT'
                 }
                 data.append(data_save)
                 print('Saving', data_save['Name'])

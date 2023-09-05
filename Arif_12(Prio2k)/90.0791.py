@@ -6,7 +6,7 @@ base_url = "https://edesk.apps.cssf.lu/search-entities-api/api/v1/entite?"
 
 data = []
 
-fields = ['Type' , 'Code' , 'Name' , 'LEI code' , 'Address']
+fields = ['Name' , 'Type' , 'Code' , 'LEI code' , 'Constitution date', 'Address', 'Link to Firm Details']
 filename = '90.0791.csv'
 
 payload = {}
@@ -41,32 +41,64 @@ while page <= max_page:
     if response.status_code == 200:
         dataJson = response.json()
         data_API = dataJson['content']
-        # entite_code = data['content'][0]['entiteCode']
-
         for info_API in data_API:
-            entiteType = info_API['entiteType']
-            entiteCode = info_API['entiteCode']
-            entiteName = info_API['entiteName']
-            leiCode = info_API['leiCode']
-            entiteAddress = info_API['entiteAddress']
+            entiteId = info_API['entiteId']
+            urlDetail = f"https://edesk.apps.cssf.lu/search-entities-api/api/v1/entite/{entiteId}"
 
-            time.sleep(1)
+            try:
+                responseDetails = requests.request("GET", urlDetail, headers=headers)
+                dataDetails = responseDetails.json()
 
-            data_save = {
-                'Type' : entiteType,           
-                'Code' : entiteCode,           
-                'Name' : entiteName,
-                'LEI code' : leiCode,
-                'Address' : entiteAddress
-            }
-            data.append(data_save)
-            print('Saving', data_save['Name'])
-            with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
-                writer = csv.DictWriter(csvfile, fieldnames=fields)
-                writer.writeheader()
-                writer.writerows(data)
+                entiteType = dataDetails.get('entiteType', '')
+                if entiteType is None:
+                    entiteType = ''
+
+                entiteCode = dataDetails.get('entiteCode', '')
+                if entiteCode is None:
+                    entiteCode = ''
+
+                entiteName = dataDetails.get('entiteName', '')
+                if entiteName is None:
+                    entiteName = ''
+
+                leiCode = dataDetails.get('leiCode', '')
+                if leiCode is None:
+                    leiCode = ''
+
+                entiteAddress = dataDetails.get('entiteAddress', '')
+                if entiteAddress is None:
+                    entiteAddress = ''
+
+                dtDebValid = dataDetails.get('dtDebValid', '')
+                if dtDebValid is None:
+                    dtDebValid = ''
+                                
+                data_save = {
+                    'Name' : entiteName,
+                    'Type' : entiteType,           
+                    'Code' : entiteCode,           
+                    'LEI code' : leiCode,
+                    'Constitution date' : dtDebValid,
+                    'Address' : entiteAddress,
+                    'Link to Firm Details' : 'https://edesk.apps.cssf.lu/search-entities/entite/details/' + str(entiteId) + '?lng=en&q=&st=advanced&entType=CFI'
+                }
+                data.append(data_save)
+                print('Saving', data_save['Name'])
+                print('Saving', data_save['Link to Firm Details'])
+                print( )
+                with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
+                    writer = csv.DictWriter(csvfile, fieldnames=fields)
+                    writer.writeheader()
+                    writer.writerows(data)
+                
+            except requests.exceptions.RequestException as e:
+                print("Requests Error ", e)
+
+            # time.sleep(1)
+
 
     else:
         print("Error Status ", response.status_code)
 
     page += 1
+

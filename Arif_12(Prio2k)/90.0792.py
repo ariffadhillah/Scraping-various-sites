@@ -71,14 +71,6 @@ while page <= max_page:
                 dtDebValid = dataDetails.get('dtDebValid', '')
                 if dtDebValid is None:
                     dtDebValid = ''
-
-                # print(entiteType)
-                # print(entiteCode)
-                # print(entiteName)
-                # print(leiCode)
-                # print(dtDebValid)
-                # print(entiteAddress)
-                # print()
                                 
                 data_save = {
                     'Name' : entiteName,
