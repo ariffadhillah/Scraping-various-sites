@@ -40,16 +40,7 @@ while True:
             type_Establishment = find_td[7].text
             nature_of_exercise = find_td[8].text
 
-            # print(identifiantREGAFI)
-            # print(companyName)
-            # print(tradename)
-            # print(siren_or_unique_identification_number)
-            # print(lEI_)
-            # print(bank_code)
-            # print(category)
-            # print(type_Establishment)
-            # print(nature_of_exercise)
-            # print( )
+
 
             data_save = {
                 'Company Name' : companyName,
