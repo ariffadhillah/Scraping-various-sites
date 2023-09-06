@@ -9,15 +9,14 @@ headers = {
 
 data = []
 
-fields = ['Company Name' , 'REGAFI Identifier' , 'Trade Name' , 'SIREN or Unique Identification Number' , 'LEI' , 'Bank Code' , 'Category' , 'Type Establishment' , 'Nature Of Exercise' ]
-filename = '90.0519.csv'
+fields = ['Company Name' , 'REGAFI Identifier' , 'Trade Name' , 'SIREN or Unique Identification Number' , 'LEI' , 'Bank Code' , 'Category' , 'Institution Type' , 'Status' ]
+filename = '90.0520.csv'
 
-base_url = 'https://www.regafi.fr/spip.php?page=results&type=advanced&id_secteur=1&lang=fr&denomination=&siren=&cib=&bic=&nom=&siren_agent=&num=&cat=34-TBR07&retrait=0'
-
+base_url = 'https://www.regafi.fr/spip.php?page=results&type=advanced&id_secteur=3&lang=en&denomination=&siren=&cib=&bic=&nom=&siren_agent=&num=&cat=42-TBR07&retrait=0'
 
 
 page = 1
-max_page = 2018
+max_page = 1
 while page <= max_page:
     time.sleep(2)    
     url  = f"{base_url}&pg={page}"
@@ -27,7 +26,7 @@ while page <= max_page:
     r = requests.get(url, headers=headers)
     soup = BeautifulSoup(r.content, 'lxml')
 
-    find_table = soup.find('table', {'summary':'Résultat de votre recherche'}, class_='table')
+    find_table = soup.find('table', {'summary':'Search results'}, class_='table')
 
     time.sleep(1)
     for find_tr in find_table.find_all('tr')[1:]:
@@ -53,8 +52,8 @@ while page <= max_page:
                 'LEI' : lEI_,
                 'Bank Code' : bank_code,
                 'Category' : category,
-                'Type Establishment' : type_Establishment,
-                'Nature Of Exercise' : nature_of_exercise
+                'Institution Type' : type_Establishment,
+                'Status' : nature_of_exercise
             }
             time.sleep(.5)
             data.append(data_save)
